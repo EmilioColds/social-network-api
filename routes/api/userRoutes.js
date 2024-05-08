@@ -25,6 +25,36 @@ routter.get('/:id', async (req, res) => {
     }
 });
 
+//POST new user
+router.post('/', async (req, res) => {
+    try {
+        const newUser = await User.create(req.body);
+        res.json(newUser);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
+//PUT new user
+router.put('/:id', async (req, res) => {
+    try {
+        const updateUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(updateUser);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+//DELETE user
+router.delete('/:id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        await Thought.deleteMany({ _id: { $in: user.thoughts } });
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: 'The user and its associated thoughts are DELETED!' });
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
 module.exports = router;
