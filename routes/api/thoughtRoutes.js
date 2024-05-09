@@ -86,11 +86,15 @@ router.post('/:thoughtId/reactions', async (req, res) => {
 //DELETE reaction
 router.delete('/:thoughtId/reactions/:reactionId', async (req, res) => {
     try {
-        const updateThought = await Thought.findByIdAndDelete(
+        const updateThought = await Thought.findByIdAndUpdate(
             req.params.thoughtId,
-            { $pull: { reactions: { reactionId: req.params.reactionId } } },
+            { $pull: { reactions: { reactionId: req.params.thoughtId.reactionId } } },
             { new: true }
         );
+        if (!updateThought) {
+            res.status(404).json({ message: 'No thought or reaction found with that ID!' });
+            return;
+        }
         res.json(updateThought);
     } catch (err) {
         res.status(500).json(err);
