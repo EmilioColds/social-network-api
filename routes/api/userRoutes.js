@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
 });
 
 //GET single user
-routter.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const user = await User.findById(req.params.id).populate('thoughts').populate('friends');
         if (!user) {
@@ -72,7 +72,7 @@ router.post('/:userId/friends/:friendId', async (req, res) => {
 });
 
 //DELETE friend
-router.post('/:userId/friends/:friendId', async (req, res) => {
+router.delete('/:userId/friends/:friendId', async (req, res) => {
     try {
         const updateUser = await User.findByIdAndUpdate(
             req.param.userId, 
