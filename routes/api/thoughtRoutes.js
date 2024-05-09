@@ -70,6 +70,31 @@ router.delete('/:id', async (req, res) => {
 });
 
 //POST reaction
+router.post('/:thoughtId/reactions', async (req, res) => {
+    try {
+        const updateThought = await Thought.findByIdAndUpdate(
+            req.params.thoughtId,
+            { $push: { reactions: req.body }},
+            { new: true }
+        );
+        res.json(updateThought);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
+//DELETE reaction
+router.delete('/:thoughtId/reactions/:reactionId', async (req, res) => {
+    try {
+        const updateThought = await Thought.findByIdAndUpdate(
+            req.params.thoughtId,
+            { $pull: { reactions: { reactionId: req.params.reactionId } } },
+            { new: true }
+        );
+        res.json(updateThought);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
 module.exports = router;
