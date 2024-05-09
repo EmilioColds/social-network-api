@@ -57,4 +57,32 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+//POST friend
+router.post('/:userId/friends/:friendId', async (req, res) => {
+    try {
+        const updateUser = await User.findByIdAndUpdate(
+            req.param.userId, 
+            { $addToSet: { friends: req.params.friendId } },
+            { new: true }
+        );
+        res.json(updateUser);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+//DELETE friend
+router.post('/:userId/friends/:friendId', async (req, res) => {
+    try {
+        const updateUser = await User.findByIdAndUpdate(
+            req.param.userId, 
+            { $pull: { friends: req.params.friendId } },
+            { new: true }
+        );
+        res.json(updateUser);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 module.exports = router;
